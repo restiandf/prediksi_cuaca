@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediksi Cuaca Indonesia</title>
+    <link rel="icon" type="image/png" href="icon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fade-in 0.6s ease-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen font-[Poppins]">
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 gap-8 max-w-6xl mx-auto mb-8">
+        <!-- Card Prediksi Cuaca -->
+        <div
+          class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl shadow-xl p-6 text-white"
+        >
+          <div class="flex items-center gap-4">
+            <img src="icon.png" alt="Weather Icon" class="w-12 h-12" hidden />
+            <img src="icon.png" alt="Weather Icon" class="w-12 h-12" />
+            <div>
+              <h1 class="text-3xl font-bold">Prediksi Cuaca Indonesia</h1>
+              <p class="text-blue-100 mb-6">
+                Dapatkan informasi cuaca terkini untuk kota-kota di Indonesia
+              </p>
+            </div>
+          </div>
+          <!-- Search Box - Yang ini dipertahankan -->
+          <div class="bg-white rounded-2xl shadow-xl p-6">
+            <div class="relative">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Cari kota di Indonesia..."
+                class="text-gray-800 w-full px-4 py-3 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:outline-none border border-gray-200 transition-all duration-300"
+              />
+              <button
+                id="searchButton"
+                class="absolute right-3 top-3 text-gray-400 hover:text-blue-500 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
+              <div id="searchLoadingIndicator" class="absolute right-3 top-3 hidden">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Container untuk Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Weather Card -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="text-center md:text-left animate-fade-in">
+                <div class="mb-4">
+                  <h2 class="text-3xl font-bold text-gray-800" id="cityName"></h2>
+                  <p class="text-gray-600" id="regionName"></p>
+                  <div class="flex items-center justify-center md:justify-start mt-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-500 mr-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="text-gray-600" id="coordinates"></span>
+                  </div>
+                </div>
+                <p class="text-gray-600" id="currentDate"></p>
+                <div class="text-5xl font-bold text-blue-600 mt-4" id="temperature"></div>
+                <p class="text-xl text-gray-600 mt-2" id="weatherDescription"></p>
+                <div class="mt-4 text-sm text-gray-500" id="feelsLike"></div>
+              </div>
+              <div class="flex items-center justify-center">
+                <img
+                  src="https://openweathermap.org/img/wn/04d@4x.png"
+                  alt="weather icon"
+                  class="w-32 h-32"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Weather Details -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+          >
+            <h3 class="text-xl font-semibold text-gray-700 mb-6 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Detail Cuaca
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="flex items-center space-x-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-8 w-8 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                  />
+                </svg>
+                <div>
+                  <p class="text-gray-500">Kelembaban</p>
+                  <p class="text-xl font-bold" id="humidity"></p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-8 w-8 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div>
+                  <p class="text-gray-500">Kecepatan Angin</p>
+                  <p class="text-xl font-bold" id="windSpeed"></p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-8 w-8 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"
+                  />
+                </svg>
+                <div>
+                  <p class="text-gray-500">Tekanan Udara</p>
+                  <p class="text-xl font-bold" id="pressure"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informasi Wilayah - Sekarang dalam satu card -->
+        <div class="bg-white rounded-3xl p-8 transition-all duration-300">
+          <h3 class="text-3xl font-bold text-blue-700 mb-8 flex items-center gap-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10 text-blue-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>Informasi Wilayah</span>
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Kelurahan Card -->
+            <div
+              class="bg-blue-50 rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <h4 class="font-bold text-gray-800">Kelurahan</h4>
+              </div>
+              <p class="text-lg font-semibold text-gray-700" id="subDistrict">-</p>
+            </div>
+
+            <!-- Kecamatan Card -->
+            <div
+              class="bg-blue-50 rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  />
+                </svg>
+                <h4 class="font-bold text-gray-800">Kecamatan</h4>
+              </div>
+              <p class="text-lg font-semibold text-gray-700" id="district">-</p>
+            </div>
+
+            <!-- Provinsi Card -->
+            <div
+              class="bg-blue-50 rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                  />
+                </svg>
+                <h4 class="font-bold text-gray-800">Provinsi</h4>
+              </div>
+              <p class="text-lg font-semibold text-gray-700" id="province">DKI Jakarta</p>
+            </div>
+
+            <!-- Negara Card -->
+            <div
+              class="bg-blue-50 rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
+                  />
+                </svg>
+                <h4 class="font-bold text-gray-800">Negara</h4>
+              </div>
+              <p class="text-lg font-semibold text-gray-700" id="country">Indonesia</p>
+            </div>
+
+            <!-- Zona Waktu Card -->
+            <div
+              class="bg-blue-50 rounded-xl p-6 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div class="flex items-center gap-4 mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-blue-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <h4 class="font-bold text-gray-800">Zona Waktu</h4>
+              </div>
+              <p class="text-lg font-semibold text-gray-700" id="timezone">WIB (UTC+7)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer dengan styling yang lebih baik -->
+        <footer class="pb-8 animate-fade-in">
+          <div class="mx-auto bg-white rounded-xl shadow-lg p-8">
+            <div class="border-t border-gray-300 pt-8">
+              <h3 class="text-xl font-semibold text-gray-700 mb-4">Tentang Aplikasi</h3>
+              <p class="text-gray-600 mb-4">
+                Aplikasi Prediksi Cuaca Indonesia menggunakan data dari OpenWeather API dan
+                OpenStreetMap.
+              </p>
+
+              <p class="text-sm text-gray-500">
+                © 2024 Prediksi Cuaca Indonesia. Dibuat oleh restiandf untuk Indonesia.
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="fixed top-0 left-0 w-full h-1 bg-blue-200 hidden">
+      <div class="h-full bg-blue-600 animate-[loading_1s_ease-in-out_infinite]"></div>
+    </div>
+
+    <style>
+      @keyframes loading {
+        0% {
+          width: 0%;
+        }
+        50% {
+          width: 70%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
