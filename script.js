@@ -1,15 +1,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const searchLoadingIndicator = document.getElementById('searchLoadingIndicator');
     
+    // Unified search handler function
+    async function handleSearch() {
+        const cityName = searchInput.value.trim();
+        if (!cityName) return;
+
+        try {
+            // Show loading indicator
+            searchLoadingIndicator.classList.remove('hidden');
+            searchButton.classList.add('hidden');
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            
+            // Call the search function
+            await searchCity(cityName);
+            
+        } catch (error) {
+            console.error('Error during search:', error);
+            alert('Terjadi kesalahan saat mencari kota');
+        } finally {
+            // Hide loading indicators
+            searchLoadingIndicator.classList.add('hidden');
+            searchButton.classList.remove('hidden');
+            document.getElementById('loadingIndicator').classList.add('hidden');
+        }
+    }
+
+    // Event listeners for search
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            const city = this.value.trim();
-            if (city) {
-                getWeatherData(city);
-                hideSearchResults();
-            }
+            handleSearch();
         }
     });
+
+    searchButton.addEventListener('click', handleSearch);
 });
 
 const API_KEY = '84db96f9e7b9149ecc4e3dee586d4d4a';
@@ -405,4 +431,12 @@ function formatTime(timestamp) {
         hour: '2-digit',
         minute: '2-digit'
     });
+} 
+
+function handleSearch() {
+    const newCity = document.getElementById('searchInput').value.trim();
+    if (newCity) {
+        currentCity = newCity;
+        updateWeatherByTime(currentCity);
+    }
 } 
